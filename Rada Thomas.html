@@ -172,6 +172,7 @@ a { color: var(--clay-deep); text-decoration: none; }
   font-size: 1.3rem;
   color: var(--ink);
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 .brand-creds {
   font-size: 0.68rem;
@@ -197,6 +198,32 @@ a { color: var(--clay-deep); text-decoration: none; }
 }
 .site-nav a:hover { color: var(--ink); }
 .site-nav a:hover::after { width: 100%; }
+
+/* Hamburger toggle (hidden on desktop) */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  margin: -10px -8px -10px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.nav-toggle-bar {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform 0.28s ease, opacity 0.2s ease;
+}
+.nav-toggle.is-open .nav-toggle-bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.is-open .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle.is-open .nav-toggle-bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
 /* ---------- Hero ---------- */
 .hero {
@@ -383,8 +410,40 @@ a { color: var(--clay-deep); text-decoration: none; }
   .about-portrait { max-width: 360px; }
   .practice-grid { grid-template-columns: 1fr; }
 }
+/* Collapse nav into a hamburger menu on phones/small tablets */
+@media (max-width: 768px) {
+  .nav-toggle { display: flex; }
+  .site-nav {
+    position: absolute;
+    top: calc(100% + 2px);
+    right: clamp(1rem, 5vw, 3.5rem);
+    min-width: 190px;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.4rem;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 22px 45px -22px rgba(50, 44, 37, 0.45);
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .site-nav.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .site-nav a {
+    font-size: 1rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+  }
+  .site-nav a::after { display: none; }
+  .site-nav a:hover { background: var(--bone-deep); color: var(--ink); }
+}
 @media (max-width: 560px) {
-  .site-nav { gap: 1rem; }
   .site-header { padding: 0.9rem 1.25rem; }
   body { font-size: 1rem; }
 }
@@ -399,7 +458,12 @@ a { color: var(--clay-deep); text-decoration: none; }
       <span class="brand-name">Rada Thomas</span>
       <span class="brand-creds">P.T. · D.O.M.P. · DSc.O</span>
     </a>
-    <nav class="site-nav">
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+    <nav class="site-nav" id="site-nav">
       <a href="#about">About</a>
       <a href="#journey">Journey</a>
       <a href="#practice">Practice</a>
@@ -558,6 +622,17 @@ a { color: var(--clay-deep); text-decoration: none; }
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const navToggle = document.querySelector('.nav-toggle');
+    const siteNav = document.getElementById('site-nav');
+    const setMenu = (open) => {
+      siteNav.classList.toggle('open', open);
+      navToggle.classList.toggle('is-open', open);
+      navToggle.setAttribute('aria-expanded', open);
+      navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    navToggle.addEventListener('click', () => setMenu(!siteNav.classList.contains('open')));
+    siteNav.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setMenu(false)));
   </script>
 
 </body>
