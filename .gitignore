@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Local editor / tooling config
+.claude/
+
+# Build & scratch artifacts (generated from source)
+dist/
+scratch_build/
+rada-thomas-site.zip
