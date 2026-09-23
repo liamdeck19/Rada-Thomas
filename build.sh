@@ -6,6 +6,7 @@ cd "$(dirname "$0")"
 rm -rf dist rada-thomas-site.zip
 mkdir -p dist/images
 cp index.html styles.css dist/
+cp images/jla-logo.png dist/images/
 sips -Z 1800 images/hero.jpg --out dist/images/hero.jpg >/dev/null
 sips -Z 1200 images/rada-portrait.jpg --out dist/images/rada-portrait.jpg >/dev/null
 (cd dist && zip -rq ../rada-thomas-site.zip . -x ".*")
